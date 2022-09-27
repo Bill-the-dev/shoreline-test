@@ -5,7 +5,7 @@ const chromeLauncher = require("chrome-launcher");
   
 // Read the csv file and store the
 // urls in an array
-var array = fs.readFileSync("URLs.csv").toString().split("\n");
+var array = fs.readFileSync("site-list.csv").toString().split("\n");
   
 // Declare a resultant array to store 
 // the generated scores and initialize
@@ -93,7 +93,7 @@ result.push(
   }
   
   // Append the result in a report.csv file and end the program
-  fs.appendFileSync("lhreport.csv", result);
-  // fs.writeFileSync('lhreport.csv', result.toString());
+  // fs.appendFileSync("lhreport.csv", result);
+  fs.writeFileSync('lhreport.csv', result.toString());
   await chrome.kill();
 })();
