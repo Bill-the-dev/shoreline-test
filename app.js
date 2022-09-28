@@ -1,15 +1,12 @@
 // Import the required npm packages
-const fs = require("fs");
+import fs from "fs";
 const lighthouse = require("lighthouse");
 const chromeLauncher = require("chrome-launcher");
   
-// Read the csv file and store the
-// urls in an array
-var array = fs.readFileSync("site-list.csv").toString().split("\n");
+// Read the csv file and store the urls in an array
+var urlArray = fs.readFileSync("site-list.csv").toString().split("\n");
   
-// Declare a resultant array to store 
-// the generated scores and initialize
-// it with headings
+// array to store generated scores and initialize it with headings
 let result = [];
 result.push(
   ", URL, Mobile_Performance, Mobile_Accessibility, Mobile_Best_Practices, Mobile_SEO, Desktop_Performance, Desktop_Accessibility, Desktop_Best_Practices, Desktop_SEO"
@@ -18,12 +15,7 @@ result.push(
 // The async await is used to ensure 
 // non-blocking code execution 
 (async () => {
-  const chrome = await chromeLauncher
-    .launch({ chromeFlags: ["--headless"] })
-  
-  // Declaring an object to specify score 
-  // for what audits, categories and type
-  // of output that needs to be generated 
+  const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
   const options = {
     logLevel: "info",
     output: "csv",
@@ -42,7 +34,7 @@ result.push(
   };
   
   // Traversing through each URL 
-  for (i in array) {
+  for (i in urlArray) {
   
     // Separate strategy for Mobile and Desktop view
     for (let x = 0; x < 2; x++) {
@@ -51,8 +43,7 @@ result.push(
       if (x == 0) options.strategy = "mobile";
       else options.strategy = "desktop";
   
-      const runnerResult = 
-        await lighthouse(array[i], options);
+      const runnerResult = await lighthouse(urlArray[i], options);
   
       // Current report
       const reportCsv = runnerResult.report;
@@ -93,7 +84,6 @@ result.push(
   }
   
   // Append the result in a report.csv file and end the program
-  // fs.appendFileSync("lhreport.csv", result);
   fs.writeFileSync('lhreport.csv', result.toString());
   await chrome.kill();
 })();
